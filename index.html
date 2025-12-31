@@ -1,237 +1,216 @@
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BOQ Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BOQ Tracker</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body class="bg-gradient-to-r from-[#e9f9fd] to-[#faffff] text-gray-800">
-  <header class="bg-gradient-to-r from-[#3477ff] to-[#5dc6ff] text-white py-4 shadow">
-    <h1 class="text-center text-2xl font-semibold tracking-wide">Bill of Quantity </h1>
-  </header>
-<!-- User Details -->
-<div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-  <h2 class="text-lg font-semibold mb-4">Site Details</h2>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <div>
-      <label class="text-sm font-medium">Name of Incharge</label>
-      <input id="userName" class="w-full border rounded-lg p-2" />
-    </div>
-    <div>
-      <label class="text-sm font-medium">Site Name</label>
-      <input id="siteName" class="w-full border rounded-lg p-2" />
+
+<body class="bg-gray-100 text-gray-800">
+
+<header class="bg-blue-700 text-white py-4 shadow">
+  <h1 class="text-center text-2xl font-semibold">Bill of Quantity (BOQ)</h1>
+</header>
+
+<div class="max-w-6xl mx-auto p-6">
+
+  <!-- Site Details -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">Site Details</h2>
+    <div class="grid md:grid-cols-2 gap-4">
+      <input id="userName" placeholder="Name of Incharge" class="border p-2 rounded">
+      <input id="siteName" placeholder="Site Name" class="border p-2 rounded">
     </div>
   </div>
+
+  <!-- Add Material -->
+  <div class="bg-white rounded-xl shadow p-6 mb-6">
+    <h2 class="text-lg font-semibold mb-4">Add Material</h2>
+    <div class="grid md:grid-cols-6 gap-3">
+      <select id="spec" class="border p-2 rounded">
+        <option value="">Specification</option>
+        <option>Pipe</option>
+        <option>Elbow</option>
+        <option>Tee</option>
+        <option>Valve</option>
+      </select>
+
+      <select id="size" class="border p-2 rounded">
+        <option value="">Size</option>
+        <option>½"</option>
+        <option>1"</option>
+        <option>2"</option>
+      </select>
+
+      <select id="moc" class="border p-2 rounded">
+        <option value="">MOC</option>
+        <option>PVC</option>
+        <option>GI</option>
+        <option>SS</option>
+      </select>
+
+      <input id="qty" type="number" placeholder="Qty" class="border p-2 rounded">
+
+      <select id="unit" class="border p-2 rounded">
+        <option value="">Unit</option>
+        <option>Nos</option>
+        <option>Meter</option>
+      </select>
+
+      <button id="addBtn" class="bg-blue-600 text-white rounded p-2">Add</button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-xl shadow p-6">
+    <div class="flex justify-between mb-4">
+      <h2 class="text-lg font-semibold">Material List</h2>
+      <div class="space-x-2">
+        <button id="excelBtn" class="bg-green-600 text-white px-4 py-1 rounded">
+          Export Excel
+        </button>
+        <button id="pdfBtn" class="bg-red-600 text-white px-4 py-1 rounded">
+          Export PDF
+        </button>
+      </div>
+    </div>
+
+    <table class="w-full border text-sm">
+      <thead class="bg-blue-100">
+        <tr>
+          <th class="border p-2">Sr</th>
+          <th class="border p-2">Specification</th>
+          <th class="border p-2">Size</th>
+          <th class="border p-2">MOC</th>
+          <th class="border p-2">Qty</th>
+          <th class="border p-2">Unit</th>
+          <th class="border p-2">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+  </div>
 </div>
-  <main class="max-w-6xl mx-auto mt-8 p-4">
-    <!-- Entry Card -->
-    <div class="bg-white rounded-2xl shadow-lg p-6 mb-8">
-      <h2 class="text-lg font-semibold mb-4">Add Material Requirement</h2>
-      <div class="grid grid-cols-2 md:grid-cols-6 gap-4 items-end">
-        <!-- Specification -->
-        <div>
-          <label class="text-sm font-medium">Specification</label>
-          <select id="spec" class="w-full border rounded-lg p-2">
-            <option value="">Select</option>
-            <option>Hose Nipple</option>
-            <option>Hose Clip</option>
-            <option>Hose Pipe</option>
-            <option>FTA</option>
-            <option>Ball Valve</option>
-            <option>NRV Union Type</option>
-            <option>Tee</option>
-            <option>Elbow</option>
-            <option>Reducer Tee</option>
-            <option>Reducing Tee</option>
-            <option>Coupling</option>
-            <option>End Cap</option>
-            <option>Union</option>
-            <option>MTA</option>
-            <option>NRV</option>
-            <option>Pipe</option>
-            <option>Butterfly Valve</option>
-            <option>Flange</option>
-            <option>Socket</option>
-            <option>Tank Nipple</option>
-            <option>Thunder Hose</option>
-            <option>Braided Hose</option>
-          </select>
-        </div>
-        <!-- Size -->
-        <div>
-          <label class="text-sm font-medium">Size</label>
-          <select id="size" class="w-full border rounded-lg p-2">
-            <option value="">Select</option>
-            <option>¼"</option><option>½"</option><option>¾"</option>
-            <option>1"</option><option>1¼"</option><option>1½"</option>
-            <option>2"</option><option>2½"</option><option>3"</option>
-            <option>4"</option><option>5"</option><option>6"</option><option>8"</option><option>10"</option>
-          </select>
-        </div>
-        <!-- MOC -->
-        <div>
-          <label class="text-sm font-medium">MOC</label>
-          <select id="moc" class="w-full border rounded-lg p-2">
-            <option value="">Select</option>
-            <option>PVC</option>
-            <option>UPVC</option>
-            <option>SS304</option>
-            <option>SS316</option>
-            <option>GI</option>
-            <option>CPVC</option>
-            <option>CI</option>
-            <option>Brass</option>
-          </select>
-        </div>
-        <!-- Quantity -->
-        <div>
-          <label class="text-sm font-medium">Quantity</label>
-          <input id="qty" type="number" min="0" class="w-full border rounded-lg p-2" />
-        </div>
-        <!-- Unit -->
-        <div>
-          <label class="text-sm font-medium">Unit</label>
-          <select id="unit" class="w-full border rounded-lg p-2">
-            <option value="">Select</option>
-            <option>Nos</option>
-            <option>Meter</option>
-          </select>
-        </div>
-        <div>
-          <button id="addBtn" class="w-full bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition">
-            Add Material
-          </button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Table -->
-    <div class="bg-white rounded-2xl shadow-lg p-6">
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-lg font-semibold">Material List</h2>
-        <div class="space-x-2">
-          <button id="excelBtn" class="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700">Export Excel</button>
-          <button id="pdfBtn" class="bg-red-600 text-white px-4 py-1 rounded hover:bg-red-700">Export PDF</button>
-        </div>
-      </div>
-      <div class="overflow-x-auto">
-        <table id="boqTable" class="min-w-full text-sm text-left border">
-          <thead class="bg-blue-100">
-            <tr>
-              <th class="px-3 py-2 border">Sr No</th>
-              <th class="px-3 py-2 border">Specification</th>
-              <th class="px-3 py-2 border">Size</th>
-              <th class="px-3 py-2 border">MOC</th>
-              <th class="px-3 py-2 border">Quantity</th>
-              <th class="px-3 py-2 border">Unit</th>
-              <th class="px-3 py-2 border text-center">Action</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-        </table>
-      </div>
-    </div>
-  </main>
+<script>
+const addBtn = document.getElementById("addBtn");
+const tableBody = document.getElementById("tableBody");
+const excelBtn = document.getElementById("excelBtn");
+const pdfBtn = document.getElementById("pdfBtn");
 
-  <script>
-    const addBtn = document.getElementById("addBtn");
-    const tableBody = document.getElementById("tableBody");
-    const excelBtn = document.getElementById("excelBtn");
-    const pdfBtn = document.getElementById("pdfBtn");
+let materials = JSON.parse(localStorage.getItem("boqData")) || [];
 
-    let materials = JSON.parse(localStorage.getItem("boqData")) || [];
+function renderTable() {
+  tableBody.innerHTML = "";
+  materials.forEach((m, i) => {
+    tableBody.innerHTML += `
+      <tr>
+        <td class="border p-2">${i + 1}</td>
+        <td class="border p-2">${m.spec}</td>
+        <td class="border p-2">${m.size}</td>
+        <td class="border p-2">${m.moc}</td>
+        <td class="border p-2">${m.qty}</td>
+        <td class="border p-2">${m.unit}</td>
+        <td class="border p-2 text-center">
+          <button onclick="deleteRow(${i})" class="text-red-600">Delete</button>
+        </td>
+      </tr>`;
+  });
+  localStorage.setItem("boqData", JSON.stringify(materials));
+}
 
-    const renderTable = () => {
-      tableBody.innerHTML = "";
-      materials.forEach((m, i) => {
-        const row = document.createElement("tr");
-        row.classList.add(i % 2 === 0 ? "bg-white" : "bg-gray-50");
-        row.innerHTML = `
-          <td class="border px-3 py-2">${i + 1}</td>
-          <td class="border px-3 py-2">${m.spec}</td>
-          <td class="border px-3 py-2">${m.size}</td>
-          <td class="border px-3 py-2">${m.moc}</td>
-          <td class="border px-3 py-2">${m.qty}</td>
-          <td class="border px-3 py-2">${m.unit}</td>
-          <td class="border px-3 py-2 text-center">
-            <button class="bg-red-500 text-white px-2 py-1 rounded" onclick="deleteRow(${i})">Delete</button>
-          </td>
-        `;
-        tableBody.appendChild(row);
-      });
-      localStorage.setItem("boqData", JSON.stringify(materials));
-    };
+function deleteRow(i) {
+  materials.splice(i, 1);
+  renderTable();
+}
 
-    const deleteRow = (i) => {
-      materials.splice(i, 1);
-      renderTable();
-    };
+addBtn.onclick = () => {
+  if (!spec.value || !size.value || !moc.value || !qty.value || !unit.value) {
+    alert("Fill all fields");
+    return;
+  }
+  materials.push({
+    spec: spec.value,
+    size: size.value,
+    moc: moc.value,
+    qty: qty.value,
+    unit: unit.value
+  });
+  renderTable();
+  document.querySelectorAll("select,input").forEach(e => e.value = "");
+};
 
-    addBtn.addEventListener("click", () => {
-      const spec = document.getElementById("spec").value;
-      const size = document.getElementById("size").value;
-      const moc = document.getElementById("moc").value;
-      const qty = document.getElementById("qty").value;
-      const unit = document.getElementById("unit").value;
-      if (!spec || !size || !moc || !qty || !unit) {
-        alert("Please fill all fields");
-        return;
-      }
-      materials.push({ spec, size, moc, qty, unit });
-      renderTable();
-      document.querySelectorAll("select, input").forEach(el => el.value = "");
-    });
- <!--For excel table -->
-excelBtn.addEventListener("click", () => {
-  const inchargeName = document.getElementById("userName").value || "—";
-  const siteName = document.getElementById("siteName").value || "—";
+/* ✅ EXCEL WITH TABLE DESIGN */
+excelBtn.onclick = () => {
+  let html = `
+  <table border="1">
+    <tr>
+      <th colspan="6" style="font-size:18px;padding:10px;">
+        BOQ TRACKER REPORT
+      </th>
+    </tr>
+    <tr><td colspan="6"></td></tr>
+    <tr>
+      <td><b>Name of Incharge</b></td>
+      <td colspan="5">${userName.value}</td>
+    </tr>
+    <tr>
+      <td><b>Site Name</b></td>
+      <td colspan="5">${siteName.value}</td>
+    </tr>
+    <tr><td colspan="6"></td></tr>
+    <tr style="background:#dbeafe;font-weight:bold;">
+      <td>Sr No</td>
+      <td>Specification</td>
+      <td>Size</td>
+      <td>MOC</td>
+      <td>Quantity</td>
+      <td>Unit</td>
+    </tr>`;
 
-  // Prepare worksheet data (top-down)
-  const sheetData = [
-    ["BOQ Tracker Report"],
-    [],
-    ["Name of Incharge", inchargeName],
-    ["Site Name", siteName],
-    [],
-    ["Sr No", "Specification", "Size", "MOC", "Quantity", "Unit"],
-    ...materials.map((m, i) => [
-      i + 1,
-      m.spec,
-      m.size,
-      m.moc,
-      m.qty,
-      m.unit
-    ])
-  ];
+  materials.forEach((m, i) => {
+    html += `
+    <tr>
+      <td>${i + 1}</td>
+      <td>${m.spec}</td>
+      <td>${m.size}</td>
+      <td>${m.moc}</td>
+      <td>${m.qty}</td>
+      <td>${m.unit}</td>
+    </tr>`;
+  });
 
-  const ws = XLSX.utils.aoa_to_sheet(sheetData);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, "BOQ");
+  html += `</table>`;
 
-  XLSX.writeFile(wb, "BOQ_Tracker.xlsx");
-});
+  const blob = new Blob([html], { type: "application/vnd.ms-excel" });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "BOQ_Tracker.xls";
+  link.click();
+};
 
-    pdfBtn.addEventListener("click", () => {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF();
-      doc.text("BOQ Tracker Report", 14, 10);
-      doc.autoTable({
-        startY: 20,
-        head: [["Sr No", "Specification", "Size", "MOC", "Quantity", "Unit"]],
-        body: materials.map((m, i) => [i + 1, m.spec, m.size, m.moc, m.qty, m.unit]),
-      });
-      doc.save("BOQ_Tracker.pdf");
-    });
+/* PDF */
+pdfBtn.onclick = () => {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+  doc.text("BOQ Tracker", 14, 10);
+  doc.text(`Incharge: ${userName.value}`, 14, 18);
+  doc.text(`Site: ${siteName.value}`, 14, 26);
 
-    renderTable();
-  </script>
+  doc.autoTable({
+    startY: 32,
+    head: [["Sr","Specification","Size","MOC","Qty","Unit"]],
+    body: materials.map((m,i)=>[i+1,m.spec,m.size,m.moc,m.qty,m.unit])
+  });
+  doc.save("BOQ_Tracker.pdf");
+};
+
+renderTable();
+</script>
+
 </body>
 </html>
