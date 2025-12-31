@@ -10,11 +10,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.29/jspdf.plugin.autotable.min.js"></script>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-
-<header class="bg-blue-700 text-white py-4 shadow">
-  <h1 class="text-center text-2xl font-semibold">Bill of Quantity (BOQ)</h1>
-</header>
+<body class="bg-gradient-to-r from-[#e9f9fd] to-[#faffff] text-gray-800">
+  <header class="bg-gradient-to-r from-[#3477ff] to-[#5dc6ff] text-white py-4 shadow">
+    <h1 class="text-center text-2xl font-semibold tracking-wide">Bill of Quantity </h1>
+  </header>
 
 <div class="max-w-6xl mx-auto p-6">
 
@@ -33,24 +32,48 @@
     <div class="grid md:grid-cols-6 gap-3">
       <select id="spec" class="border p-2 rounded">
         <option value="">Specification</option>
-        <option>Pipe</option>
-        <option>Elbow</option>
+        <option>Hose Nipple</option>
+        <option>Hose Clip</option>
+        <option>Hose Pipe</option>
+        <option>FTA</option>
+        <option>Ball Valve</option>
+        <option>NRV Union Type</option>
         <option>Tee</option>
-        <option>Valve</option>
+        <option>Elbow</option>
+        <option>Reducer Tee</option>
+        <option>Reducing Tee</option>
+        <option>Coupling</option>
+        <option>End Cap</option>
+        <option>Union</option>
+        <option>MTA</option>
+        <option>NRV</option>
+        <option>Pipe</option>
+        <option>Butterfly Valve</option>
+        <option>Flange</option>
+        <option>Socket</option>
+        <option>Tank Nipple</option>
+        <option>Thunder Hose</option>
+        <option>Braided Hose</option>
       </select>
 
       <select id="size" class="border p-2 rounded">
         <option value="">Size</option>
-        <option>½"</option>
-        <option>1"</option>
-        <option>2"</option>
+        <option>¼"</option><option>½"</option><option>¾"</option>
+        <option>1"</option><option>1¼"</option><option>1½"</option>
+        <option>2"</option><option>2½"</option><option>3"</option>
+        <option>4"</option><option>5"</option><option>6"</option><option>8"</option><option>10"</option>
       </select>
 
       <select id="moc" class="border p-2 rounded">
         <option value="">MOC</option>
         <option>PVC</option>
-        <option>GI</option>
-        <option>SS</option>
+            <option>UPVC</option>
+            <option>SS304</option>
+            <option>SS316</option>
+            <option>GI</option>
+            <option>CPVC</option>
+            <option>CI</option>
+            <option>Brass</option>
       </select>
 
       <input id="qty" type="number" placeholder="Qty" class="border p-2 rounded">
